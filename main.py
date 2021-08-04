@@ -33,8 +33,8 @@ image3 = M5Img("res/pawprint.png", x=219, y=165, parent=None)
 label2 = M5Label('Last fed:', x=43, y=26, color=0x000, font=FONT_MONT_14, parent=None)
 label3 = M5Label('Text', x=108, y=26, color=0x000, font=FONT_MONT_14, parent=None)
 label4 = M5Label('seconds ago', x=144, y=26, color=0x000, font=FONT_MONT_14, parent=None)
-ps = M5Label('Text', x=21, y=217, color=0x000, font=FONT_MONT_14, parent=None)
-HttpStatus = M5Label('Text', x=249, y=217, color=0x000, font=FONT_MONT_14, parent=None)
+ps = M5Label('Waiting', x=21, y=217, color=0x000, font=FONT_MONT_14, parent=None)
+HttpStatus = M5Label('Status', x=249, y=217, color=0x000, font=FONT_MONT_14, parent=None)
 
 import math
 
@@ -51,7 +51,7 @@ def SendPOST():
   global foodQuantity, status, DataMap, lastFoodTime, json_data, buttonPressed
   status = 'No StatusCode'
   try:
-    req = urequests.request(method='GET', url='replace_with_your_webscript_url', headers={'Content-Type':'application/json'})
+    req = urequests.request(method='POST', url='Replace_With_Your_Webscript_Address',data=json_data, headers={'Content-Type':'application/json'})
     ps.set_text_color(0x006600)
     wait(2)
     status = req.status_code
@@ -73,7 +73,10 @@ def btnRed0_wasPressed():
   buttonPressed = 'red'
   servo_0.write_angle(-90)
   wait_ms(10)
-  servo_0.write_us(0)
+  servo_0.write_us(0) 
+  PetFeeder()
+  wait_ms(100)
+  SendPOST()
   pass
 dual_button_0.btnRed.wasPressed(btnRed0_wasPressed)
 def btnRed0_wasReleased():
@@ -91,6 +94,9 @@ def btnBlue0_wasPressed():
   servo_0.write_angle(-90)
   wait_ms(10)
   servo_1.write_us(0)
+  PetFeeder()
+  wait_ms(100)
+  SendPOST()
   pass
 dual_button_0.btnBlue.wasPressed(btnBlue0_wasPressed)
 def btnBlue0_wasReleased():
